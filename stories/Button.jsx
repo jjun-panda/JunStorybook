@@ -1,30 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import '../style/css/index.css'
-import '../style/css/button.css';
+import './style/scss/index.scss';
+import './style/scss/button.scss';
 
 /**
  * Primary UI component for user interaction
  */
-export const Button = ({ primary, backgroundColor, size, label, ...props }) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+export const Button = ({ category, backgroundColor, size, label, ...props }) => {
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태를 저장하는 상태값
+
+  let mode = '';
+
+  if (category === 'Primary') {
+    mode = 'storybook-button--primary';
+  } else if (category === 'SolidSecondary') {
+    mode = 'storybook-button--SolidSecondary';
+  } else if (category === 'Outline') {
+    mode = 'storybook-button--Outline';
+  } else if (category === 'Secondary') {
+    mode = 'storybook-button--Secondary';
+  }
+
+  // onClick 프로퍼티를 클릭 이벤트 핸들러에 연결
+  const handleButtonClick = (event) => {
+    setIsLoading(true); // 로딩 상태를 true로 설정
+    // 일정 시간 후 로딩 상태를 false로 되돌리는 예시
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    if (onClick) {
+      onClick(event); // 만약 외부에서 onClick 프로퍼티를 지정했다면, 해당 클릭 이벤트 핸들러 호출
+    }
+  };
+
   return (
-    <button
-      type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-      style={backgroundColor && { backgroundColor }}
-      {...props}
-    >
-      {label}
-    </button>
+    <>
+      <button
+        type="button"
+        className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+        style={backgroundColor && { backgroundColor }}
+        {...props}
+      >
+        {label}
+      </button>
+      <br/>
+      <br/>
+      <button
+        type="button"
+        className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
+        style={backgroundColor && { backgroundColor }}
+        disabled
+        {...props}
+      >
+        {label}
+      </button>
+      <br/>
+      <br/>
+      <button
+        type="button"
+        className={['storybook-button', `storybook-button--${size}`, mode, `${mode}--loading`].join(' ')}
+        style={backgroundColor && { backgroundColor }}
+        // disabled={isLoading}
+        onClick={handleButtonClick} // 수정된 클릭 이벤트 핸들러를 전달
+        {...props}
+      >
+        {/* {isLoading ? '로딩 중...' : label} */}
+      </button>
+    </>
   );
 };
 
 Button.propTypes = {
   /**
-   * Is this the principal call to action on the page?
+   * Button category
    */
-  primary: PropTypes.bool,
+  category: PropTypes.oneOf(['Primary', 'SolidSecondary', 'Outline', 'Secondary']),
   /**
    * What background color to use
    */
@@ -32,7 +83,7 @@ Button.propTypes = {
   /**
    * How large should the button be?
    */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  size: PropTypes.oneOf(['Small', 'Medium', 'Large']),
   /**
    * Button contents
    */
@@ -45,7 +96,7 @@ Button.propTypes = {
 
 Button.defaultProps = {
   backgroundColor: null,
-  primary: false,
-  size: 'medium',
+  category: 'Primary',
+  size: 'Medium',
   onClick: undefined,
 };
