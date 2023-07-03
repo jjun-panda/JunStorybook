@@ -62,7 +62,7 @@ export const Button = ({ category, backgroundColor, size, label, ...props }) => 
         className={['storybook-button', `storybook-button--${size}`, mode, `${mode}--loading`].join(' ')}
         style={backgroundColor && { backgroundColor }}
         // disabled={isLoading}
-        onClick={handleButtonClick} // 수정된 클릭 이벤트 핸들러를 전달
+        onClick={handleButtonClick} // 수정된 클릭 이벤트 핸들러 전달
         {...props}
       >
         {/* {isLoading ? '로딩 중...' : label} */}
